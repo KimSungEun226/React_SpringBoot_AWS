@@ -1,11 +1,11 @@
-package com.example.demo.service;
+package com.huibigo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.UserEntity;
-import com.example.demo.persistence.UserRepository;
+import com.huibigo.model.UserEntity;
+import com.huibigo.persistence.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +33,7 @@ public class UserService {
 			final PasswordEncoder encoder) {
 		final UserEntity originalUser = userRepository.findByUsername(username);
 		
-		// matches ¸Þ¼­µå¸¦ ÀÌ¿ëÇØ ÆÐ½º¿öµå°¡ °°ÀºÁö È®ÀÎ
+		// matches ï¿½Þ¼ï¿½ï¿½å¸¦ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½Ð½ï¿½ï¿½ï¿½ï¿½å°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 		if(originalUser != null &&
 			encoder.matches(password, originalUser.getPassword())) {
 			return originalUser;

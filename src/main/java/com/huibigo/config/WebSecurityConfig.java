@@ -1,14 +1,13 @@
-package com.example.demo.config;
+package com.huibigo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.filter.CorsFilter;
 
-import com.example.demo.security.JwtAuthenticationFilter;
+import com.huibigo.security.JwtAuthenticationFilter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,25 +20,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// http ½ÃÅ¥¸®Æ¼ ºô´õ
-		http.cors() // WebMvcConfig¿¡¼­ ÀÌ¹Ì ¼³Á¤ÇßÀ¸¹Ç·Î ±âº» cors ¼³Á¤
+		// http ï¿½ï¿½Å¥ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½
+		http.cors() // WebMvcConfigï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½âº» cors ï¿½ï¿½ï¿½ï¿½
 			.and()
-			.csrf() // csrf´Â ÇöÀç »ç¿ëÇÏÁö ¾ÊÀ¸¹Ç·Î disable
+			.csrf() // csrfï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ disable
 			  .disable()
-			.httpBasic()  // tokenÀ» »ç¿ëÇÏ¹Ç·Î basic ÀÎÁõ disable
+			.httpBasic()  // tokenï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¹Ç·ï¿½ basic ï¿½ï¿½ï¿½ï¿½ disable
 			  .disable()
-			.sessionManagement()  // session ±â¹ÝÀÌ ¾Æ´ÔÀ» ¼±¾ð
+			.sessionManagement()  // session ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			  .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
-			.authorizeRequests() // /¿Í /auth/** °æ·Î´Â ÀÎÁõ ¾È ÇØµµ µÊ.
+			.authorizeRequests() // /ï¿½ï¿½ /auth/** ï¿½ï¿½Î´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Øµï¿½ ï¿½ï¿½.
 			  .antMatchers("/", "/auth/**").permitAll()
-			.anyRequest()  // /¿Í /auth/** ÀÌ¿ÜÀÇ ¸ðµç °æ·Î´Â ÀÎÁõÇØ¾ßµÊ
+			.anyRequest()  // /ï¿½ï¿½ /auth/** ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Î´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ßµï¿½
 			  .authenticated();
 		
-		// filter µî·Ï
-		// ¸Å ¿äÃ»¸¶´Ù
-		// CorsFilter ½ÇÇàÇÑÈÄ¿¡
-		// jwtAuthenticationFilter ½ÇÇàÇÑ´Ù.
+		// filter ï¿½ï¿½ï¿½
+		// ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½
+		// CorsFilter ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½
+		// jwtAuthenticationFilter ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 		http.addFilterAfter(jwtAuthenticationFilter,
 				CorsFilter.class);
 	}

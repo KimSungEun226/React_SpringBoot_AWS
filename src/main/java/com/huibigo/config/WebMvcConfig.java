@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.huibigo.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -11,11 +11,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		// ¸ðµç °æ·Î¿¡ ´ëÇØ
+		// ï¿½ï¿½ï¿½ ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½
 		registry.addMapping("/**")
-		// OriginÀÌ http:localhost:3000¿¡ ´ëÇØ.
+		// Originï¿½ï¿½ http:localhost:3000ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 		.allowedOrigins("http://localhost:3000")
-		// GET, POST, PUT, PATCH, DELETE, OPTION ¸Þ¼­µå¸¦ Çã¿ëÇÑ´Ù.
+		// GET, POST, PUT, PATCH, DELETE, OPTION ï¿½Þ¼ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 		.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
 		.allowedHeaders("*")
 		.allowCredentials(true)

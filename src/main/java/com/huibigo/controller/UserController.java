@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.huibigo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.ResponseDTO;
-import com.example.demo.dto.UserDTO;
-import com.example.demo.model.UserEntity;
-import com.example.demo.security.TokenProvider;
-import com.example.demo.service.UserService;
+import com.huibigo.dto.UserDTO;
+import com.huibigo.model.UserEntity;
+import com.huibigo.security.TokenProvider;
+import com.huibigo.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,12 +36,12 @@ public class UserController {
 			if(userDTO == null || userDTO.getPassword() == null) {
 				throw new RuntimeException("Invalid Password value.");
 			}
-		// ¿äÃ»À» ÀÌ¿ëÇØ ÀúÀåÇÒ À¯Àú ¸¸µé±â
+		// ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 		UserEntity user = UserEntity.builder()
 				.username(userDTO.getUsername())
 				.password(passwordEncoder.encode(userDTO.getPassword()))
 				.build();
-		// ¼­ºñ½º¸¦ ÀÌ¿ëÇØ ¸®Æ÷ÁöÅÍ¸®¿¡ À¯Àú ÀúÀå
+		// ï¿½ï¿½ï¿½ñ½º¸ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		UserEntity registeredUser = userService.create(user);
 		UserDTO responseUserDTO = UserDTO.builder()
 				.id(registeredUser.getId())
@@ -49,7 +49,7 @@ public class UserController {
 				.build();
 		return ResponseEntity.ok().body(responseUserDTO);
 		} catch (Exception e) {
-			// À¯Àú Á¤º¸´Â Ç×»ó ÇÏ³ªÀÌ¹Ç·Î ¸®½ºÆ®·Î ¸¸µé¾î¾ß ÇÏ´Â ResponseDTO¸¦ »ç¿ëÇÏÁö ¾Ê°í ±×³É UserDTO ¸®ÅÏ.
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×»ï¿½ ï¿½Ï³ï¿½ï¿½Ì¹Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ResponseDTOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½×³ï¿½ UserDTO ï¿½ï¿½ï¿½ï¿½.
 			ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
 			return ResponseEntity.badRequest().body(responseDTO);
 		}
@@ -63,7 +63,7 @@ public class UserController {
 				passwordEncoder);
 		
 		if(user != null) {
-			// ÅäÅ« »ý¼º
+			// ï¿½ï¿½Å« ï¿½ï¿½ï¿½ï¿½
 			final String token = tokenProvider.create(user);
 			final UserDTO responseUserDTO = UserDTO.builder()
 					.username(user.getUsername())

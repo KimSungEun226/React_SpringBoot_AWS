@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.huibigo.security;
 
 import java.io.IOException;
 
@@ -30,17 +30,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		try {
-			// ¿äÃ»¿¡¼­ ÅäÅ« °¡Á®¿À±â
+			// ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å« ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			String token =parseBearerToken(request);
 			log.info("Filter is running...");
-			// ÅäÅ« °Ë»çÇÏ±â. JWTÀÌ¹Ç·Î ÀÎ°¡ ¼­¹ö¿¡ ¿äÃ»ÇÏÁö ¾Ê°íµµ °ËÁõ °¡´É.
+			// ï¿½ï¿½Å« ï¿½Ë»ï¿½ï¿½Ï±ï¿½. JWTï¿½Ì¹Ç·ï¿½ ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 			if(token != null && !token.equalsIgnoreCase("null")) {
-				// userId °¡Á®¿À±â. À§Á¶µÈ °æ¿ì ¿¹¿Ü Ã³¸®µÈ´Ù.
+				// userId ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½È´ï¿½.
 				String userId = tokenProvider.validateAndGetUserId(token);
 				log.info("Authenticated user ID : " + userId);
-				// ÀÎÁõ ¿Ï·á; SecurityContextHolder¿¡ µî·ÏÇØ¾ß ÀÎÁõµÈ »ç¿ëÀÚ¶ó°í »ý°¢ÇÑ´Ù.
+				// ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½; SecurityContextHolderï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 				AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-						userId,  // <- AuthenticationPrincipal (¶Ç´Â principal)
+						userId,  // <- AuthenticationPrincipal (ï¿½Ç´ï¿½ principal)
 						null,
 						AuthorityUtils.NO_AUTHORITIES
 				);
@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	}
 	
 	private String parseBearerToken(HttpServletRequest request) {
-		// Http ¿äÃ»ÀÇ Çì´õ¸¦ ÆÄ½ÌÇØ Bearer ÅäÅ«À» ¸®ÅÏÇÑ´Ù.
+		// Http ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½ï¿½ Bearer ï¿½ï¿½Å«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 		String bearerToken = request.getHeader("Authorization");
 		
 		if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

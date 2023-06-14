@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.huibigo.security;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.UserEntity;
+import com.huibigo.model.UserEntity;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,14 +20,14 @@ public class TokenProvider {
 			+ "nasdDSV3JFGbnjksdnui3opASDFSDVnjkfdfSDFnjbkdffvdcd3v4XCJVDccx2FM5FDBFGD";
 	
 	public String create(UserEntity userEntity) {
-		// ±âÇÑ Áö±ÝÀ¸·ÎºÎÅÍ 1ÀÏ·Î ¼³Á¤
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½ 1ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½
 		Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
 		
-		// JWT Token»ý¼º
+		// JWT Tokenï¿½ï¿½ï¿½ï¿½
 		return Jwts.builder()
-				// header¿¡ µé¾î°¥ ³»¿ë ¹× ¼­¸íÀ» ÇÏ±â À§ÇÑ SECRET_KEY
+				// headerï¿½ï¿½ ï¿½ï¿½î°¥ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ SECRET_KEY
 				.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-				// payload¿¡ µé¾î°¥ ³»¿ë
+				// payloadï¿½ï¿½ ï¿½ï¿½î°¥ ï¿½ï¿½ï¿½ï¿½
 				.setSubject(userEntity.getId()) // sub
 				.setIssuer("demo app") //iss
 				.setIssuedAt(new Date()) // iat
@@ -36,10 +36,10 @@ public class TokenProvider {
 	}
 	
 	public String validateAndGetUserId(String token) {
-		// parseClaimsJws ¸Þ¼­µå°¡ Base 64·Î µðÄÚµù ¹× ÆÄ½Ì
-		// Áï, Çì´õ¿Í ÆäÀÌ·Îµå¸¦ setSigningKey·Î ³Ñ¾î¿Â ½ÃÅ©¸´À» ÀÌ¿ëÇØ ¼­¸í ÈÄ, tokenÀÇ ¼­¸í°ú ºñ±³.
-		// À§Á¶µÇÁö ¾Ê¾Ò´Ù¸é ÆäÀÌ·Îµå(Claims) ¸®ÅÏ, À§Á¶¶ó¸é ¿¹¿Ü¸¦ ³¯¸²
-		// ±× Áß ¿ì¸®´Â userId°¡ ÇÊ¿äÇÏ¹Ç·Î getBody¸¦ ºÎ¸¥´Ù.
+		// parseClaimsJws ï¿½Þ¼ï¿½ï¿½å°¡ Base 64ï¿½ï¿½ ï¿½ï¿½ï¿½Úµï¿½ ï¿½ï¿½ ï¿½Ä½ï¿½
+		// ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì·Îµå¸¦ setSigningKeyï¿½ï¿½ ï¿½Ñ¾ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, tokenï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò´Ù¸ï¿½ ï¿½ï¿½ï¿½Ì·Îµï¿½(Claims) ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ü¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// ï¿½ï¿½ ï¿½ï¿½ ï¿½ì¸®ï¿½ï¿½ userIdï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Ï¹Ç·ï¿½ getBodyï¿½ï¿½ ï¿½Î¸ï¿½ï¿½ï¿½.
 		Claims claims = Jwts.parser()
 				.setSigningKey(SECRET_KEY)
 				.parseClaimsJws(token)

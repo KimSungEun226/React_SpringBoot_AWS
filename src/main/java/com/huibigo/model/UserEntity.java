@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.huibigo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,14 +25,14 @@ public class UserEntity {
 	@Id
 	@GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
-	private String id;  //À¯Àú¿¡°Ô °íÀ¯ÇÏ°Ô ºÎ¿©µÇ´Â id;
+	private String id;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Î¿ï¿½ï¿½Ç´ï¿½ id;
 	
 	@Column(nullable = false)
-	private String username; // ¾ÆÀÌµð·Î »ç¿ëÇÒ À¯Àú³×ÀÓ. ÀÌ¸ÞÀÏÀÏ ¼öµµ ±×³É ¹®ÀÚ¿­ÀÏ ¼öµµ ÀÖ´Ù.
+	private String username; // ï¿½ï¿½ï¿½Ìµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½.
 	
-	private String password; // ÆÐ½º¿öµå.
+	private String password; // ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½.
 	
-	private String role; // »ç¿ëÀÚÀÇ ·ê. ¿¹: ¾îµå¹Î, ÀÏ¹Ý»ç¿ëÀÚ
+	private String role; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½. ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½, ï¿½Ï¹Ý»ï¿½ï¿½ï¿½ï¿½
 	
-	private String authProvider; //  ÀÌÈÄ OAuth¿¡¼­ »ç¿ëÇÒ À¯Àú Á¤º¸ Á¦°øÀÚ : github
+	private String authProvider; //  ï¿½ï¿½ï¿½ï¿½ OAuthï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : github
 }
