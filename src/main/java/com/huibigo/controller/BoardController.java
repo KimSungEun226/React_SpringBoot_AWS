@@ -1,6 +1,5 @@
-package com.example.demo.controller;
+package com.huibigo.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,26 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.ResponseDTO;
-import com.example.demo.dto.TodoDTO;
 import com.example.demo.model.TodoEntity;
 import com.example.demo.service.TodoService;
+import com.huibigo.dto.ResponseDTO;
+import com.huibigo.dto.TodoDTO;
 
 @RestController
-@RequestMapping("todo") //¸®¼Ò½º
-public class TodoController {
+@RequestMapping("todo") //ï¿½ï¿½ï¿½Ò½ï¿½
+public class BoardController {
 	
 	@Autowired
 	private TodoService service;
-	
-	@GetMapping("/test")
-	public ResponseEntity<?> testTodo() {
-		String str = service.testService();
-		List<String> list = new ArrayList<String>();
-		list.add(str);
-		ResponseDTO<String> response = ResponseDTO.<String>builder().data(list).build(); 
-		return ResponseEntity.ok().body(response);
-	}
 	
 	@PostMapping
 	public ResponseEntity<?> createTodo(@AuthenticationPrincipal String userId, 
@@ -42,28 +32,28 @@ public class TodoController {
 		try {
 			String temporaryUserId = "temporary-user";  // temporary user id.
 			
-			// (1) TodoEntity·Î º¯È¯ÇÑ´Ù.
+			// (1) TodoEntityï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
 			TodoEntity entity = TodoDTO.toEntity(dto);
 			
-			// (2) id¸¦ null·Î ÃÊ±âÈ­ÇÑ´Ù. »ý¼º ´ç½Ã¿¡´Â id°¡ ¾ø¾î¾ß ÇÏ±â ¶§¹®ÀÌ´Ù.
+			// (2) idï¿½ï¿½ nullï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ idï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½.
 			entity.setId(null);
 			
-			// (3) Authentication Bearer TokenÀ» ÅëÇØ ¹ÞÀº userId¸¦ ³Ñ±ä´Ù.
+			// (3) Authentication Bearer Tokenï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ userIdï¿½ï¿½ ï¿½Ñ±ï¿½ï¿½.
 			entity.setUserId(userId);
 			
-			// (4) ¼­ºñ½º¸¦ ÀÌ¿ëÇØ Todo ¿£Æ¼Æ¼¸¦ »ý¼ºÇÑ´Ù.
+			// (4) ï¿½ï¿½ï¿½ñ½º¸ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ Todo ï¿½ï¿½Æ¼Æ¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			List<TodoEntity> entities = service.create(entity);
 			
-			// (5) ÀÚ¹Ù ½ºÆ®¸²À» ÀÌ¿ëÇØ ¸®ÅÏµÈ ¿£Æ¼Æ¼ ¸®½ºÆ®¸¦ TodoDTO ¸®½ºÆ®·Î º¯È¯ÇÑ´Ù.
+			// (5) ï¿½Ú¹ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ ï¿½ï¿½Æ¼Æ¼ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ TodoDTO ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
 			List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
 			
-			// (6) ¹ÝÇÑµÈ TodoDTO ¸®½ºÆ®¸¦ ÀÌ¿ëÇØ ResponseDTO¸¦ ÃÊ±âÈ­ÇÑ´Ù.
+			// (6) ï¿½ï¿½ï¿½Ñµï¿½ TodoDTO ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ResponseDTOï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½.
 			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
 			
-			// (7) ResponseDTO¸¦ ¸®ÅÏÇÑ´Ù.
+			// (7) ResponseDTOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			return ResponseEntity.ok().body(response);
 		} catch (Exception e) {
-			// (8) È¤½Ã ¿¹¿Ü°¡ ³ª´Â °æ¿ì dto ´ë½Å error¿¡ ¸Þ½ÃÁö¸¦ ³Ö¾î ¸®ÅÏÇÑ´Ù.
+			// (8) È¤ï¿½ï¿½ ï¿½ï¿½ï¿½Ü°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ dto ï¿½ï¿½ï¿½ errorï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			
 			String error = e.getMessage();
 			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
@@ -74,16 +64,16 @@ public class TodoController {
 	@GetMapping
 	public ResponseEntity<?> retrieveTodoList(@AuthenticationPrincipal String userId) {
 		
-		//(1) ¼­ºñ½º ¸Þ¼­µåÀÇ retrieve ¸Þ¼­µå¸¦ »ç¿ëÇØ Todo ¸®½ºÆ®¸¦ °¡Á®¿Â´Ù.
+		//(1) ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½ retrieve ï¿½Þ¼ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ Todo ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½.
 		List<TodoEntity> entities = service.retrieve(userId);
 		
-		//(2) ÀÚ¹Ù ½ºÆ®¸²À» ÀÌ¿ëÇØ ¸®ÅÏµÈ ¿£Æ¼Æ¼ ¸®½ºÆ®¸¦ TodoDTO ¸®½ºÆ®·Î º¯È¯ÇÑ´Ù.
+		//(2) ï¿½Ú¹ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ ï¿½ï¿½Æ¼Æ¼ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ TodoDTO ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
 		List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
 		
-		//(3) º¯È¯µÈ TodoDTO ¸®½ºÆ®¸¦ ÀÌ¿ëÇØ ResponseDTO¸¦ ÃÊ±âÈ­ÇÑ´Ù.
+		//(3) ï¿½ï¿½È¯ï¿½ï¿½ TodoDTO ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ResponseDTOï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½.
 		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
 		
-		//(4) ResponseDTO¸¦ ¸®ÅÏÇÑ´Ù.
+		//(4) ResponseDTOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 		return ResponseEntity.ok().body(response);
 	}
 	
@@ -91,22 +81,22 @@ public class TodoController {
 	public ResponseEntity<?> updateTodo(@AuthenticationPrincipal String userId,
 			@RequestBody TodoDTO dto) {
 		
-		//(1) dto¸¦ Entity·Î º¯È¯ÇÑ´Ù.
+		//(1) dtoï¿½ï¿½ Entityï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
 		TodoEntity entity = TodoDTO.toEntity(dto);
 		
-		//(2) id¸¦ temporaryUserId·Î ÃÊ±âÈ­ÇÑ´Ù. ¿©±â´Â 4Àå ÀÎÁõ°ú ÀÎ°¡¿¡¼­ ¼öÁ¤ÇÒ ¿¹Á¤ÀÌ´Ù.
+		//(2) idï¿½ï¿½ temporaryUserIdï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ 4ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½.
 		entity.setUserId(userId);
 		
-		//(3) ¼­ºñ½º¸¦ ÀÌ¿ëÇØ entity¸¦ ¾÷µ¥ÀÌÆ®ÇÑ´Ù.
+		//(3) ï¿½ï¿½ï¿½ñ½º¸ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ entityï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ñ´ï¿½.
 		List<TodoEntity> entities = service.update(entity);
 		
-		//(4) ÀÚ¹Ù ½ºÆ®¸²À» ÀÌ¿ëÇØ ¸®ÅÏµÈ ¿£Æ¼Æ¼ ¸®½ºÆ®¸¦ TodoDTO ¸®½ºÆ®·Î º¯È¯ÇÑ´Ù.
+		//(4) ï¿½Ú¹ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ ï¿½ï¿½Æ¼Æ¼ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ TodoDTO ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
 		List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
 		
-		//(5) º¯È¯µÈ TodoDTO ¸®½ºÆ®¸¦ ÀÌ¿ëÇØ ResponseDTO¸¦ ÃÊ±âÈ­ÇÑ´Ù.
+		//(5) ï¿½ï¿½È¯ï¿½ï¿½ TodoDTO ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ResponseDTOï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½.
 		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
 		
-		//(6) ResponseDTO¸¦ ¸®ÅÏÇÑ´Ù.
+		//(6) ResponseDTOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 		return ResponseEntity.ok().body(response);
 	}
 	
@@ -115,26 +105,26 @@ public class TodoController {
 			@RequestBody TodoDTO dto) {
 		try {
 			
-			// (1) TodoEntity·Î º¯È¯ÇÑ´Ù.
+			// (1) TodoEntityï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
 			TodoEntity entity = TodoDTO.toEntity(dto);
 			
-			// (2) ÀÓ½Ã À¯Àú ¾ÆÀÌµð¸¦ ¼³Á¤ÇØÁØ´Ù. ÀÌ ºÎºÐÀº 4Àå ÀÎÁõ°ú ÀÎ°¡¿¡¼­ ¼öÁ¤ÇÒ ¿¹Á¤ÀÌ´Ù. Áö±ÝÀº ÀÎÁõ°ú ÀÎ°¡±â´ÉÀÌ ¾øÀ¸¹Ç·Î ÇÑ À¯Àú(temporary-user)¸¸ ·Î±×ÀÎ ¾øÀÌ »ç¿ë °¡´ÉÇÑ ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÎ ¼ÀÀÌ´Ù.
+			// (2) ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½. ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½ 4ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(temporary-user)ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½.
 			entity.setUserId(userId);
 			
-			// (3) ¼­ºñ½º¸¦ ÀÌ¿ëÇØ Todo ¿£Æ¼Æ¼¸¦ »èÁ¦ÇÑ´Ù.
+			// (3) ï¿½ï¿½ï¿½ñ½º¸ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ Todo ï¿½ï¿½Æ¼Æ¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			List<TodoEntity> entities = service.delete(entity);
 			
 			
-			// (4) ÀÚ¹Ù ½ºÆ®¸²À» ÀÌ¿ëÇØ ¸®ÅÏµÈ ¿£Æ¼Æ¼ ¸®½ºÆ®¸¦ TodoDTO ¸®½ºÆ®·Î º¯È¯ÇÑ´Ù.
+			// (4) ï¿½Ú¹ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ ï¿½ï¿½Æ¼Æ¼ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ TodoDTO ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
 			List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
 			
-			// (5) ¹ÝÇÑµÈ TodoDTO ¸®½ºÆ®¸¦ ÀÌ¿ëÇØ ResponseDTO¸¦ ÃÊ±âÈ­ÇÑ´Ù.
+			// (5) ï¿½ï¿½ï¿½Ñµï¿½ TodoDTO ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ResponseDTOï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½.
 			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
 			
-			// (6) ResponseDTO¸¦ ¸®ÅÏÇÑ´Ù.
+			// (6) ResponseDTOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			return ResponseEntity.ok().body(response);
 		} catch (Exception e) {
-			// (8) È¤½Ã ¿¹¿Ü°¡ ³ª´Â °æ¿ì dto ´ë½Å error¿¡ ¸Þ½ÃÁö¸¦ ³Ö¾î ¸®ÅÏÇÑ´Ù.
+			// (8) È¤ï¿½ï¿½ ï¿½ï¿½ï¿½Ü°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ dto ï¿½ï¿½ï¿½ errorï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			String error = e.getMessage();
 			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
 			return ResponseEntity.badRequest().body(response);

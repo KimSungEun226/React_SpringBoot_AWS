@@ -14,13 +14,6 @@ class DemoApplicationTests {
 	//BoardRepository bR;
 	
 	@Test
-	void contextLoads() {
-		System.out.println("안녕하세요ㅗ..");
-		BoardEntity b = new BoardEntity();
-		//b.setId(123L);
-		b.setTitle("안녕하세욥");
-		b.setWriter("존성은");
-		//bR.save(b);
-	}
+	void contextLoads() {}
 
 }

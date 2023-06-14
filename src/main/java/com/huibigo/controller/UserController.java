@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.ResponseDTO;
+import com.huibigo.dto.ResponseDTO;
 import com.huibigo.dto.UserDTO;
 import com.huibigo.model.UserEntity;
 import com.huibigo.security.TokenProvider;

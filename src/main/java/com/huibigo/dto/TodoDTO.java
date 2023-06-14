@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.huibigo.dto;
 
 import com.example.demo.model.TodoEntity;
 
@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class TodoDTO {
-	private String id; 			// ÀÌ ¿ÀºêÁ§Æ®ÀÇ ¾ÆÀÌµð
-	private String title;		// Todo Å¸ÀÌÆ² ¿¹) ¿îµ¿ ÇÏ±â
-	private boolean done;		// true - todo¸¦ ¿Ï·áÇÑ °æ¿ì(checked)
+	private String id; 			// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½
+	private String title;		// Todo Å¸ï¿½ï¿½Æ² ï¿½ï¿½) ï¿½îµ¿ ï¿½Ï±ï¿½
+	private boolean done;		// true - todoï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½(checked)
 	
 	public TodoDTO(final TodoEntity entity) {
 		this.id = entity.getId();
