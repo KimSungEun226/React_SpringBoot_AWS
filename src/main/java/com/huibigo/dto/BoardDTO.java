@@ -2,12 +2,10 @@ package com.huibigo.dto;
 
 import java.time.LocalDateTime;
 
-import com.example.demo.model.TodoEntity;
 import com.huibigo.model.BoardEntity;
 import com.huibigo.model.UserEntity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

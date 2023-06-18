@@ -14,119 +14,80 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.TodoEntity;
-import com.example.demo.service.TodoService;
+import com.huibigo.dto.BoardDTO;
 import com.huibigo.dto.ResponseDTO;
-import com.huibigo.dto.TodoDTO;
+import com.huibigo.model.BoardEntity;
+import com.huibigo.model.UserEntity;
+import com.huibigo.service.BoardService;
 
 @RestController
-@RequestMapping("todo") //���ҽ�
+@RequestMapping("board") 
 public class BoardController {
 	
 	@Autowired
-	private TodoService service;
+	private BoardService service;
 	
 	@PostMapping
-	public ResponseEntity<?> createTodo(@AuthenticationPrincipal String userId, 
-			@RequestBody TodoDTO dto) {
+	public ResponseEntity<?> createBoard(@AuthenticationPrincipal String userId, 
+			@RequestBody BoardDTO dto) {
 		try {
-			String temporaryUserId = "temporary-user";  // temporary user id.
-			
-			// (1) TodoEntity�� ��ȯ�Ѵ�.
-			TodoEntity entity = TodoDTO.toEntity(dto);
-			
-			// (2) id�� null�� �ʱ�ȭ�Ѵ�. ���� ��ÿ��� id�� ����� �ϱ� �����̴�.
+			BoardEntity entity = BoardDTO.toEntity(dto);
 			entity.setId(null);
+			entity.setWriter(UserEntity.builder().id(userId).build());
+			BoardEntity boardEntity = service.create(entity);
 			
-			// (3) Authentication Bearer Token�� ���� ���� userId�� �ѱ��.
-			entity.setUserId(userId);
+			BoardDTO boardDto = new BoardDTO(boardEntity);
+			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().data(boardDto).build();
 			
-			// (4) ���񽺸� �̿��� Todo ��ƼƼ�� �����Ѵ�.
-			List<TodoEntity> entities = service.create(entity);
-			
-			// (5) �ڹ� ��Ʈ���� �̿��� ���ϵ� ��ƼƼ ����Ʈ�� TodoDTO ����Ʈ�� ��ȯ�Ѵ�.
-			List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
-			
-			// (6) ���ѵ� TodoDTO ����Ʈ�� �̿��� ResponseDTO�� �ʱ�ȭ�Ѵ�.
-			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
-			
-			// (7) ResponseDTO�� �����Ѵ�.
 			return ResponseEntity.ok().body(response);
 		} catch (Exception e) {
-			// (8) Ȥ�� ���ܰ� ���� ��� dto ��� error�� �޽����� �־� �����Ѵ�.
 			
 			String error = e.getMessage();
-			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
+			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().error(error).build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
 	
 	@GetMapping
-	public ResponseEntity<?> retrieveTodoList(@AuthenticationPrincipal String userId) {
+	public ResponseEntity<?> retrieveBoardList(@RequestBody(required = false) BoardDTO boardDTO) {
 		
-		//(1) ���� �޼����� retrieve �޼��带 ����� Todo ����Ʈ�� �����´�.
-		List<TodoEntity> entities = service.retrieve(userId);
+		List<BoardEntity> entities = null;
+		if(boardDTO == null) entities = service.retrieve();
+		else entities = service.retrieveOptional(BoardDTO.toEntity(boardDTO));
 		
-		//(2) �ڹ� ��Ʈ���� �̿��� ���ϵ� ��ƼƼ ����Ʈ�� TodoDTO ����Ʈ�� ��ȯ�Ѵ�.
-		List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+		List<BoardDTO> dtos = entities.stream().map(BoardDTO::new).collect(Collectors.toList());
 		
-		//(3) ��ȯ�� TodoDTO ����Ʈ�� �̿��� ResponseDTO�� �ʱ�ȭ�Ѵ�.
-		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
-		
-		//(4) ResponseDTO�� �����Ѵ�.
+		ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().datas(dtos).build();
 		return ResponseEntity.ok().body(response);
 	}
 	
 	@PutMapping
-	public ResponseEntity<?> updateTodo(@AuthenticationPrincipal String userId,
-			@RequestBody TodoDTO dto) {
+	public ResponseEntity<?> updateBoard(@AuthenticationPrincipal String userId,
+			@RequestBody BoardDTO dto) {
 		
-		//(1) dto�� Entity�� ��ȯ�Ѵ�.
-		TodoEntity entity = TodoDTO.toEntity(dto);
+		BoardEntity entity = BoardDTO.toEntity(dto);
+		entity.setWriter(UserEntity.builder().id(userId).build());
+		BoardEntity updatedEntity = service.update(entity);
 		
-		//(2) id�� temporaryUserId�� �ʱ�ȭ�Ѵ�. ����� 4�� ������ �ΰ����� ������ �����̴�.
-		entity.setUserId(userId);
-		
-		//(3) ���񽺸� �̿��� entity�� ������Ʈ�Ѵ�.
-		List<TodoEntity> entities = service.update(entity);
-		
-		//(4) �ڹ� ��Ʈ���� �̿��� ���ϵ� ��ƼƼ ����Ʈ�� TodoDTO ����Ʈ�� ��ȯ�Ѵ�.
-		List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
-		
-		//(5) ��ȯ�� TodoDTO ����Ʈ�� �̿��� ResponseDTO�� �ʱ�ȭ�Ѵ�.
-		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
-		
-		//(6) ResponseDTO�� �����Ѵ�.
+		BoardDTO boardDto = new BoardDTO(updatedEntity);
+		ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().data(boardDto).build();
 		return ResponseEntity.ok().body(response);
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<?> deleteTodo(@AuthenticationPrincipal String userId,
-			@RequestBody TodoDTO dto) {
+	public ResponseEntity<?> deleteBoard(@AuthenticationPrincipal String userId,
+			@RequestBody BoardDTO dto) {
 		try {
 			
-			// (1) TodoEntity�� ��ȯ�Ѵ�.
-			TodoEntity entity = TodoDTO.toEntity(dto);
+			BoardEntity entity = BoardDTO.toEntity(dto);
+			entity.setWriter(UserEntity.builder().id(userId).build());
+			service.delete(entity);
 			
-			// (2) �ӽ� ���� ���̵� �������ش�. �� �κ��� 4�� ������ �ΰ����� ������ �����̴�. ������ ������ �ΰ������ �����Ƿ� �� ����(temporary-user)�� �α��� ���� ��� ������ ���ø����̼��� ���̴�.
-			entity.setUserId(userId);
-			
-			// (3) ���񽺸� �̿��� Todo ��ƼƼ�� �����Ѵ�.
-			List<TodoEntity> entities = service.delete(entity);
-			
-			
-			// (4) �ڹ� ��Ʈ���� �̿��� ���ϵ� ��ƼƼ ����Ʈ�� TodoDTO ����Ʈ�� ��ȯ�Ѵ�.
-			List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
-			
-			// (5) ���ѵ� TodoDTO ����Ʈ�� �̿��� ResponseDTO�� �ʱ�ȭ�Ѵ�.
-			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
-			
-			// (6) ResponseDTO�� �����Ѵ�.
-			return ResponseEntity.ok().body(response);
+			return ResponseEntity.ok().body(null);
 		} catch (Exception e) {
-			// (8) Ȥ�� ���ܰ� ���� ��� dto ��� error�� �޽����� �־� �����Ѵ�.
 			String error = e.getMessage();
-			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
+			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().error(error).build();
+			
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
