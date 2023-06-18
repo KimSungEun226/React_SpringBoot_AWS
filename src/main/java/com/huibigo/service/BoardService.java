@@ -46,20 +46,21 @@ public class BoardService {
 		validate(entity);
 		
 		// (2) 넘겨받은 엔티티 id를 이용해 TodoEntity를 가져온다. 존재하지 않는 엔티티는 업데이트할 수 없기 때문이다.
-		final Optional<BoardEntity> original = repository.findByUserId(entity.getWriter().getId());
+		BoardEntity original = repository.findByIdAndUser_Id(entity.getId(), entity.getUser().getId());
 		
-		original.ifPresent(board -> {
-		// (3) 반환된 TodoEntity가 존재하면 값을 새 entity의 값으로 덮어 씌운다.
-			board.setTitle(entity.getTitle());
-			board.setContent(entity.getContent());
-			board.setUpdateTime(LocalDateTime.now());
+		if(original != null) {
+			// (3) 반환된 TodoEntity가 존재하면 값을 새 entity의 값으로 덮어 씌운다.
+			original.setTitle(entity.getTitle());
+			original.setContent(entity.getContent());
+			original.setUpdateTime(LocalDateTime.now());
 		
 		// (4) 데이터베이스에 새 값을 저장한다.
-			repository.save(board);
-		});
-		
-		// 2.3.2 Retrieve Todo에서 만든 메서드를 이용해 유저의 모든 Todo 리스트를 리턴한다.
-		return original.get();
+			repository.save(original);			
+		}else {
+			log.warn("Unknown writer.");
+			throw new RuntimeException("Unknown writer."); 
+		}
+		return original;
 	}
 
 	public void delete(final BoardEntity entity) {
@@ -84,7 +85,7 @@ public class BoardService {
 			throw new RuntimeException("Entity cannot be null");
 		}
 		
-		if(entity.getWriter() == null) {
+		if(entity.getUser() == null) {
 			log.warn("Unknown writer.");
 			throw new RuntimeException("Unknown writer.");
 		}

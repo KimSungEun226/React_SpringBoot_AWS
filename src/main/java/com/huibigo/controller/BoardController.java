@@ -33,7 +33,7 @@ public class BoardController {
 		try {
 			BoardEntity entity = BoardDTO.toEntity(dto);
 			entity.setId(null);
-			entity.setWriter(UserEntity.builder().id(userId).build());
+			entity.setUser(UserEntity.builder().id(userId).build());
 			BoardEntity boardEntity = service.create(entity);
 			
 			BoardDTO boardDto = new BoardDTO(boardEntity);
@@ -66,7 +66,7 @@ public class BoardController {
 			@RequestBody BoardDTO dto) {
 		
 		BoardEntity entity = BoardDTO.toEntity(dto);
-		entity.setWriter(UserEntity.builder().id(userId).build());
+		entity.setUser(UserEntity.builder().id(userId).build());
 		BoardEntity updatedEntity = service.update(entity);
 		
 		BoardDTO boardDto = new BoardDTO(updatedEntity);
@@ -80,7 +80,7 @@ public class BoardController {
 		try {
 			
 			BoardEntity entity = BoardDTO.toEntity(dto);
-			entity.setWriter(UserEntity.builder().id(userId).build());
+			entity.setUser(UserEntity.builder().id(userId).build());
 			service.delete(entity);
 			
 			return ResponseEntity.ok().body(null);

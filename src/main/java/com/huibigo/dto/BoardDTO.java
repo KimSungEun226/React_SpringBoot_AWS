@@ -26,7 +26,7 @@ public class BoardDTO {
 		this.id = entity.getId();
 		this.title = entity.getTitle();
 		this.content = entity.getContent();
-		this.writerId = entity.getWriter().getId();
+		this.writerId = entity.getUser().getId();
 		this.category = entity.getCategory();
 		this.createTime = entity.getCreateTime();
 		this.updateTime = entity.getUpdateTime();
@@ -37,7 +37,7 @@ public class BoardDTO {
 				.id(dto.getId())
 				.title(dto.getTitle())
 				.content(dto.getContent())
-				.writer(UserEntity.builder().id(dto.getWriterId()).build())
+				.user(UserEntity.builder().id(dto.getWriterId()).build())
 				.category(dto.getCategory())
 				.createTime(dto.getCreateTime())
 				.updateTime(dto.getUpdateTime())

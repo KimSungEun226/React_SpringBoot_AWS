@@ -41,5 +41,5 @@ public class BoardEntity {
 	
 	@JoinColumn(name = "user_id", nullable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
-	private UserEntity writer;
+	private UserEntity user;
 }
