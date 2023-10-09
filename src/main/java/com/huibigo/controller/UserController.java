@@ -1,21 +1,16 @@
 package com.huibigo.controller;
 
+import com.huibigo.dto.ResponseDTO;
+import com.huibigo.dto.UserDTO;
+import com.huibigo.model.UserEntity;
+import com.huibigo.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.huibigo.dto.ResponseDTO;
-import com.huibigo.dto.UserDTO;
-import com.huibigo.model.UserEntity;
-import com.huibigo.security.TokenProvider;
-import com.huibigo.service.UserService;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -24,11 +19,9 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+
 	
-	@Autowired
-	private TokenProvider tokenProvider;
-	
-	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	//private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
@@ -39,7 +32,7 @@ public class UserController {
 		// ��û�� �̿��� ������ ���� �����
 		UserEntity user = UserEntity.builder()
 				.username(userDTO.getUsername())
-				.password(passwordEncoder.encode(userDTO.getPassword()))
+				.password(userDTO.getPassword())
 				.build();
 		// ���񽺸� �̿��� �������͸��� ���� ����
 		UserEntity registeredUser = userService.create(user);
@@ -57,14 +50,11 @@ public class UserController {
 	
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
-		UserEntity user = userService.getByCredentials(
-				userDTO.getUsername(),
-				userDTO.getPassword(),
-				passwordEncoder);
-		
+		UserEntity user = null;
+
 		if(user != null) {
 			// ��ū ����
-			final String token = tokenProvider.create(user);
+			final String token = null;
 			final UserDTO responseUserDTO = UserDTO.builder()
 					.username(user.getUsername())
 					.id(user.getId())

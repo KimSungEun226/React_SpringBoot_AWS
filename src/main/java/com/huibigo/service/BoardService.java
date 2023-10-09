@@ -1,16 +1,14 @@
 package com.huibigo.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
+import com.huibigo.model.BoardEntity;
+import com.huibigo.persistence.BoardRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.huibigo.model.BoardEntity;
-import com.huibigo.persistence.BoardRepository;
-
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -23,7 +21,6 @@ public class BoardService {
 		
 		//validation
 		validate(entity);
-		
 		BoardEntity createdBoard = repository.save(entity);	
 		log.info("Entity Id : {} is saved", entity.getId());
 		
@@ -34,11 +31,16 @@ public class BoardService {
 		return repository.findAll();
 	}
 	
-	public List<BoardEntity> retrieveOptional(final BoardEntity entity) {
+	public List<BoardEntity> retrieveOptional(final String category) {
 		
 		// (1) 검색조건에 따른 자료들을 검색한다.
-		if(entity.getCategory() != null) return repository.findByCategory(entity.getCategory());
-		else return repository.findByCategory(entity.getCategory());
+		return repository.findByCategory(category);
+	}
+
+	public Optional<BoardEntity> retrieveOptional(final Long id) {
+
+		// (1) 검색조건에 따른 자료들을 검색한다.
+		return repository.findById(id);
 	}
 	
 	public BoardEntity update(final BoardEntity entity) {
@@ -46,7 +48,7 @@ public class BoardService {
 		validate(entity);
 		
 		// (2) 넘겨받은 엔티티 id를 이용해 TodoEntity를 가져온다. 존재하지 않는 엔티티는 업데이트할 수 없기 때문이다.
-		BoardEntity original = repository.findByIdAndUser_Id(entity.getId(), entity.getUser().getId());
+		BoardEntity original = null; //repository.findByIdAndUser_Id(entity.getId(), null/*entity.getUser().getId()*/);
 		
 		if(original != null) {
 			// (3) 반환된 TodoEntity가 존재하면 값을 새 entity의 값으로 덮어 씌운다.
@@ -85,9 +87,9 @@ public class BoardService {
 			throw new RuntimeException("Entity cannot be null");
 		}
 		
-		if(entity.getUser() == null) {
-			log.warn("Unknown writer.");
-			throw new RuntimeException("Unknown writer.");
-		}
+//		if(entity.getUser() == null) {
+//			log.warn("Unknown writer.");
+//			throw new RuntimeException("Unknown writer.");
+//		}
 	}
 }

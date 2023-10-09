@@ -1,35 +1,33 @@
 package com.huibigo.dto;
 
-import java.time.LocalDateTime;
-
 import com.huibigo.model.BoardEntity;
-import com.huibigo.model.UserEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class BoardDTO {
 	
-	private Long id; 			// �� ������Ʈ�� ���̵�
-	private String title;		// Todo Ÿ��Ʋ ��) � �ϱ�
+	private Long id;
+	private String title;
 	private String content;
 	private String writerId;
 	private String category;
-	private LocalDateTime createTime;
-	private LocalDateTime updateTime;
+	private String createTime;
+	private String updateTime;
 	
 	public BoardDTO(final BoardEntity entity) {
 		this.id = entity.getId();
 		this.title = entity.getTitle();
 		this.content = entity.getContent();
-		this.writerId = entity.getUser().getId();
+		//this.writerId = entity.getUser().getId();
 		this.category = entity.getCategory();
-		this.createTime = entity.getCreateTime();
-		this.updateTime = entity.getUpdateTime();
+		this.createTime = entity.getCreateTime()!=null?entity.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")):null;
+		this.updateTime = entity.getUpdateTime()!=null?entity.getUpdateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")):null;
 	}
 	
 	public static BoardEntity toEntity(final BoardDTO dto) {
@@ -37,10 +35,7 @@ public class BoardDTO {
 				.id(dto.getId())
 				.title(dto.getTitle())
 				.content(dto.getContent())
-				.user(UserEntity.builder().id(dto.getWriterId()).build())
 				.category(dto.getCategory())
-				.createTime(dto.getCreateTime())
-				.updateTime(dto.getUpdateTime())
 				.build();
 	}
 }

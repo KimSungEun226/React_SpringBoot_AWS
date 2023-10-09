@@ -1,21 +1,15 @@
 package com.huibigo.model;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Builder
 @NoArgsConstructor
@@ -23,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "Board")
+@EntityListeners(AuditingEntityListener.class)
 public class BoardEntity {
 	
 	@Id
@@ -35,11 +30,14 @@ public class BoardEntity {
 	private String content;
 	
 	private String category;
-	
+
+	@CreatedDate
 	private LocalDateTime createTime;
+
+	@LastModifiedDate
 	private LocalDateTime updateTime;
 	
-	@JoinColumn(name = "user_id", nullable = false)
-	@ManyToOne(fetch = FetchType.LAZY)
-	private UserEntity user;
+//	@JoinColumn(name = "user_id", nullable = false)
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	private UserEntity user;
 }
