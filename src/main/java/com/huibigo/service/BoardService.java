@@ -4,10 +4,11 @@ import com.huibigo.model.BoardEntity;
 import com.huibigo.persistence.BoardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -27,14 +28,14 @@ public class BoardService {
 		return createdBoard;
 	}
 	
-	public List<BoardEntity> retrieve() {
-		return repository.findAll();
+	public Page<BoardEntity> retrieve(Pageable pageable) {
+		return repository.findAll(pageable);
 	}
 	
-	public List<BoardEntity> retrieveOptional(final String category) {
+	public Page<BoardEntity> retrieveOptional(final String categoryId, Pageable pageable) {
 		
 		// (1) 검색조건에 따른 자료들을 검색한다.
-		return repository.findByCategory(category);
+		return repository.findByCategory_CategoryIdOrderByCreateTimeDesc(Long.parseLong(categoryId), pageable);
 	}
 
 	public Optional<BoardEntity> retrieveOptional(final Long id) {

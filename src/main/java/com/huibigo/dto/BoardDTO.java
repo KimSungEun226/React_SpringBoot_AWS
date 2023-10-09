@@ -1,5 +1,6 @@
 package com.huibigo.dto;
 
+import com.huibigo.model.BoardCategoryEntity;
 import com.huibigo.model.BoardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class BoardDTO {
 	private String title;
 	private String content;
 	private String writerId;
-	private String category;
+	private BoardCategoryEntity category;
 	private String createTime;
 	private String updateTime;
 	

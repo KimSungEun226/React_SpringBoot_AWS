@@ -28,8 +28,10 @@ public class BoardEntity {
 	
 	@Lob
 	private String content;
-	
-	private String category;
+
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private BoardCategoryEntity category;
 
 	@CreatedDate
 	private LocalDateTime createTime;

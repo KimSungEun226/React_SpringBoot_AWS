@@ -5,6 +5,8 @@ import com.huibigo.dto.ResponseDTO;
 import com.huibigo.model.BoardEntity;
 import com.huibigo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,13 +43,14 @@ public class BoardController {
 	}
 
 	@GetMapping
-	public ResponseEntity<?> retrieveBoardList(@RequestParam(required = false) String category) {
+	public ResponseEntity<?> retrieveBoardList(@RequestParam(required = false) String categoryId, Pageable pageable) {
 		
-		List<BoardEntity> entities = null;
-		if(category == null) entities = service.retrieve();
-		else entities = service.retrieveOptional(category);
-		
-		List<BoardDTO> dtos = entities.stream().map(BoardDTO::new).collect(Collectors.toList());
+		Page<BoardEntity> entities = null;
+
+		if(categoryId == null) entities = service.retrieve(pageable);
+		else entities = service.retrieveOptional(categoryId, pageable);
+
+		List<BoardDTO> dtos = entities.getContent().stream().map(BoardDTO::new).collect(Collectors.toList());
 		
 		ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().datas(dtos).build();
 		return ResponseEntity.ok().body(response);
@@ -58,7 +61,7 @@ public class BoardController {
 
 		Optional<BoardEntity> boardEntity = service.retrieveOptional(id);
 		BoardDTO boardDto = null;
-		if(boardEntity.isPresent()) boardDto = new BoardDTO(service.retrieveOptional(id).get());
+		if(boardEntity.isPresent()) boardDto = new BoardDTO(boardEntity.get());
 
 		ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().data(boardDto).build();
 		return ResponseEntity.ok().body(response);
