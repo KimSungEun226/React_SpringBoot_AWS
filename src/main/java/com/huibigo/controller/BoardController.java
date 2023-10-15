@@ -49,10 +49,12 @@ public class BoardController {
 
 		if(categoryId == null) entities = service.retrieve(pageable);
 		else entities = service.retrieveOptional(categoryId, pageable);
-
 		List<BoardDTO> dtos = entities.getContent().stream().map(BoardDTO::new).collect(Collectors.toList());
 		
-		ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().datas(dtos).build();
+		ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder()
+				.datas(dtos)
+				.totalPage(entities.getTotalElements())
+				.build();
 		return ResponseEntity.ok().body(response);
 	}
 

@@ -1,10 +1,11 @@
 package com.huibigo.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -14,4 +15,7 @@ public class ResponseDTO<T>{
 	private String error;
 	private List<T> datas;
 	private T data;
+
+	//페이징처리를 위함
+	private long totalPage;
 }
